@@ -15,4 +15,13 @@ export class PersonalsController {
             throw new InternalServerErrorException();
         }
     }
+
+    @Get('/all')
+    public findAll() {
+        try {
+            return this.personalService.findAll();
+        } catch (error) {
+            throw error;
+        }
+    }
 }
