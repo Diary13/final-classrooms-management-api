@@ -2,14 +2,37 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 import { CreatePersonalsDto } from 'src/dto/create/create-personals.dto';
 import { PersonalDocument, Personals } from 'src/personals/personals.model';
 import { UpdatePersonalsDto } from 'src/dto/update/update-personals.dto';
+import { LoginDto } from 'src/dto/login.dto';
+import { UsingJoinTableIsNotAllowedError } from 'typeorm';
+import { environement } from 'src/environment';
 
 @Injectable()
 export class PersonalsService {
 
     constructor(@InjectModel(Personals.name) private readonly personalModel: Model<PersonalDocument>) { }
+
+    public async login(loginDto: LoginDto) {
+        try {
+            const personal = await this.personalModel.findOne({ mail: loginDto.mail });
+            if (!personal) throw new NotFoundException();
+            if (!bcrypt.compareSync(loginDto.password, personal.password))
+                throw new NotFoundException();
+            return {
+                token: jwt.sign({
+                    id: personal._id,
+                    name: personal.name,
+                    mail: personal.mail,
+                    photo: personal.photo
+                }, environement.KEY)
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 
     public create(createPersonal: CreatePersonalsDto) {
         try {

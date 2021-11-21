@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from '@nestjs/common';
 import { CreatePersonalsDto } from 'src/dto/create/create-personals.dto';
+import { LoginDto } from 'src/dto/login.dto';
 import { UpdatePersonalsDto } from 'src/dto/update/update-personals.dto';
 import { PersonalsService } from 'src/personals/services/personals/personals.service';
 
@@ -7,6 +8,15 @@ import { PersonalsService } from 'src/personals/services/personals/personals.ser
 export class PersonalsController {
 
     constructor(private personalService: PersonalsService) { }
+
+    @Post('/login')
+    public login(@Body() logindto: LoginDto) {
+        try {
+            return this.personalService.login(logindto);
+        } catch (error) {
+            throw error;
+        }
+    }
 
     @Post()
     public create(@Body() createPersonal: CreatePersonalsDto) {
