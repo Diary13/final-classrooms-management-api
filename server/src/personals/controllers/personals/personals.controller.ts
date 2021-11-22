@@ -36,6 +36,15 @@ export class PersonalsController {
         }
     }
 
+    @Get('/:id')
+    public findOne(@Param('id') id: string) {
+        try {
+            return this.personalService.findOne(id);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     @Patch('/update/:id')
     public update(@Param('id') id: string, @Body() newPersonal: UpdatePersonalsDto) {
         try {

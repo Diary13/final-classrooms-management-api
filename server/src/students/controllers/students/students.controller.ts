@@ -27,6 +27,15 @@ export class StudentsController {
         }
     }
 
+    @Get('/:id')
+    public findOne(@Param('id') id: string) {
+        try {
+            return this.studentService.findOne(id);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     @Patch('/update/:id')
     public update(@Param('id') id: string, @Body() newStudent: UpdateStudentDto) {
         try {
