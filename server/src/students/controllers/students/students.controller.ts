@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post, Put } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateStudentsDto } from 'src/dto/create/create-students.dto';
 import { UpdateStudentDto } from 'src/dto/update/update-student.dto';
@@ -36,7 +36,7 @@ export class StudentsController {
         }
     }
 
-    @Patch('/update/:id')
+    @Put('/update/:id')
     public update(@Param('id') id: string, @Body() newStudent: UpdateStudentDto) {
         try {
             return this.studentService.update(id, newStudent);
