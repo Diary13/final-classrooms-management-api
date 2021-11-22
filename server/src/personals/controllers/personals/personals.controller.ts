@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from '@nestjs/common';
 import { CreatePersonalsDto } from 'src/dto/create/create-personals.dto';
 import { LoginDto } from 'src/dto/login.dto';
