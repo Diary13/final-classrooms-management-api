@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post, Put } from '@nestjs/common';
 import { CreateEDTDto } from 'src/dto/create/create-EDT.dto';
 import { EdtService } from 'src/edt/services/edt/edt.service';
 
@@ -34,7 +34,7 @@ export class EdtController {
         }
     }
 
-    @Patch('/update/:id')
+    @Put('/update/:id')
     public update(@Param('id') id: string, @Body() newEDT: CreateEDTDto) {
         try {
             return this.EDTService.update(id, newEDT);
