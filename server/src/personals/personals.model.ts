@@ -10,7 +10,7 @@ export class Personals {
     name: string;
     @Prop({ required: true })
     mail: string;
-    @Prop({ required: true })
+    @Prop({ required: false })
     password: string;
     @Prop({ required: false })
     photo?: string;
