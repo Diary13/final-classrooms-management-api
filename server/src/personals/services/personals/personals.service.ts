@@ -54,6 +54,14 @@ export class PersonalsService {
         }
     }
 
+    public async findOne(personal_id: string) {
+        try {
+            return await this.personalModel.findOne({ _id: personal_id });
+        } catch (error) {
+            throw new NotFoundException();
+        }
+    }
+
     public async update(personal_id: string, newPersonal: UpdatePersonalsDto) {
         try {
             if (newPersonal.isAdmin == true) {
