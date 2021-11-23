@@ -27,6 +27,14 @@ export class StudentsService {
         }
     }
 
+    public async findOne(student_id: string) {
+        try {
+            return await this.studentsModel.findOne({ _id: student_id });
+        } catch (error) {
+            throw new NotFoundException();
+        }
+    }
+
     public async update(student_id: string, newStudent: UpdateStudentDto) {
         try {
             return await this.studentsModel.updateOne({ _id: student_id }, {
