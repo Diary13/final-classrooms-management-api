@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -7,9 +8,18 @@ import { EdtModule } from './edt/edt.module';
 import { PersonalsModule } from './personals/personals.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { StudentsModule } from './students/students.module';
+import { SubjectsModule } from './subjects/services/subjects.module';
 
 @Module({
-  imports: [StudentsModule, MongooseModule.forRoot('mongodb://localhost:27017/rooms_gestion'), BranchsModule, EdtModule, PersonalsModule, RoomsModule],
+  imports: [
+    StudentsModule,
+    MongooseModule.forRoot('mongodb://localhost:27017/rooms_gestion'),
+    BranchsModule,
+    EdtModule,
+    PersonalsModule,
+    RoomsModule,
+    SubjectsModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

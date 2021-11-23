@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import * as Mongoose from "mongoose";
-export type EDTDocument = Document & Rooms;
+export type RoomDocument = Document & Rooms;
 
 @Schema()
 export class Rooms {
