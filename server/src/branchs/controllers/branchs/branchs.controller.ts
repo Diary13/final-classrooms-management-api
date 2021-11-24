@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Param, Patch, Post, Delete } from '@nestjs/common';
-import { throwError } from 'rxjs';
 import { BranchsService } from 'src/branchs/services/branchs/branchs.service';
 import { CreateBranchsDto } from 'src/dto/create/create-branchs.dto';
 import { UpdateBranchDto } from 'src/dto/update/update-branch.dto';
