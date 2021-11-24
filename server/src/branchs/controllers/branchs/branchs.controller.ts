@@ -3,7 +3,9 @@ import { throwError } from 'rxjs';
 import { BranchsService } from 'src/branchs/services/branchs/branchs.service';
 import { CreateBranchsDto } from 'src/dto/create/create-branchs.dto';
 import { UpdateBranchDto } from 'src/dto/update/update-branch.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('branchs')
 @Controller('branchs')
 export class BranchsController {
 
