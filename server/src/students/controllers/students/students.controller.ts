@@ -3,7 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateStudentsDto } from 'src/dto/create/create-students.dto';
 import { UpdateStudentDto } from 'src/dto/update/update-student.dto';
 import { StudentsService } from 'src/students/services/students/students.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('students')
 @Controller('students')
 export class StudentsController {
 

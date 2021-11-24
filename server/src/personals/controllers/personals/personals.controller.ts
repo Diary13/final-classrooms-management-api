@@ -3,7 +3,9 @@ import { CreatePersonalsDto } from 'src/dto/create/create-personals.dto';
 import { LoginDto } from 'src/dto/login.dto';
 import { UpdatePersonalsDto } from 'src/dto/update/update-personals.dto';
 import { PersonalsService } from 'src/personals/services/personals/personals.service';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('personals')
 @Controller('personals')
 export class PersonalsController {
 
