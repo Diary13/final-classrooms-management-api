@@ -30,6 +30,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.1.4",
     "@nestjs/typeorm": "^8.0.2",
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",

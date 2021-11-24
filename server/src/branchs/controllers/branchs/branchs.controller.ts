@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { BranchsService } from 'src/branchs/services/branchs/branchs.service';
 import { CreateBranchsDto } from 'src/dto/create/create-branchs.dto';
