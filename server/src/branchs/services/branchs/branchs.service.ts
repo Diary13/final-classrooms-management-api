@@ -24,7 +24,7 @@ export class BranchsService {
 
     public async findAll(): Promise<any> {
         try {
-            return await this.branchModel.find();
+            return await this.branchModel.find().populate('EDT');
         } catch (error) {
             console.log(error);
             return new NotFoundException();
