@@ -1,13 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { CreateRoomsDto } from 'src/dto/create/create-room.dto';
 import { RoomsService } from 'src/rooms/services/rooms/rooms.service';
 import { InternalServerErrorException } from '@nestjs/common';
 import { UpdateRoomsDto } from 'src/dto/update/update-rooms.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('rooms')
 @Controller('rooms')
 export class RoomsController {
-    constructor(private readonly roomService: RoomsService) {}
+    constructor(private readonly roomService: RoomsService) { }
 
     @Post()
     public create(@Body() createRooms: CreateRoomsDto) {
@@ -17,9 +18,9 @@ export class RoomsController {
             throw new InternalServerErrorException();
         }
     }
-    
+
     @Get('/all')
-    public findAll(){
+    public findAll() {
         try {
             return this.roomService.findAll()
         } catch (error) {
@@ -27,7 +28,7 @@ export class RoomsController {
         }
     }
 
-    @Patch('/update/:id')
+    @Put('/update/:id')
     public update(@Param('id') id: string, @Body() newRoom: UpdateRoomsDto) {
         try {
             return this.roomService.update(id, newRoom);
@@ -35,7 +36,6 @@ export class RoomsController {
             throw error;
         }
     }
-
 
     @Delete('/one/:id')
     public delete(@Param('id') id: string) {

@@ -1,7 +1,9 @@
 import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post, Put } from '@nestjs/common';
 import { CreateEDTDto } from 'src/dto/create/create-EDT.dto';
 import { EdtService } from 'src/edt/services/edt/edt.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('EDT')
 @Controller('edt')
 export class EdtController {
 

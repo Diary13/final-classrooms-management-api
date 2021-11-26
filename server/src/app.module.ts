@@ -8,7 +8,7 @@ import { EdtModule } from './edt/edt.module';
 import { PersonalsModule } from './personals/personals.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { StudentsModule } from './students/students.module';
-import { SubjectsModule } from './subjects/services/subjects.module';
+import { SubjectsModule } from './subjects/subjects.module';
 
 @Module({
   imports: [

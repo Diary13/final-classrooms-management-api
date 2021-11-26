@@ -1,12 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class UpdateStudentDto {
+export class UpdateSubjectsDto {
     @ApiProperty()
     readonly name?: string;
     @ApiProperty()
-    readonly mail?: string;
-    @ApiProperty()
-    readonly photo: string;
+    readonly prof?: string;
     @ApiProperty()
     readonly branch?: string;
 }

@@ -1,16 +1,16 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Subjects } from '../subjects.model';
+import { Subjects } from '../../subjects.model';
 import { Model } from 'mongoose';
 import { SubjectDocument } from 'src/subjects/subjects.model';
 import { CreateSubjectsDto } from 'src/dto/create/create-subject.dto';
-import { UpdateSubjectsDto } from 'src/dto/update/uptate-subjects.dto';
+import { UpdateSubjectsDto } from 'src/dto/update/update-subjects.dto';
 
 @Injectable()
 export class SubjectsService {
 
-    constructor(@InjectModel(Subjects.name) private readonly subjectModel: Model<SubjectDocument>) {}
+    constructor(@InjectModel(Subjects.name) private readonly subjectModel: Model<SubjectDocument>) { }
 
     //Create
     public create(createSubjects: CreateSubjectsDto) {
@@ -23,7 +23,7 @@ export class SubjectsService {
     }
 
     //Read
-    public async findAll(){
+    public async findAll() {
         try {
             return await this.subjectModel.find();
         } catch (error) {
@@ -32,24 +32,25 @@ export class SubjectsService {
     }
 
     //Update
-    public async update(subjectsId: string, newSub: UpdateSubjectsDto){
-      try {
-          return await this.subjectModel.updateOne({ _id: subjectsId },
-            {
-                name: newSub.name,
-                prof: newSub.prof,
-                branch: newSub.branch            }
+    public async update(subjectsId: string, newSub: UpdateSubjectsDto) {
+        try {
+            return await this.subjectModel.updateOne({ _id: subjectsId },
+                {
+                    name: newSub.name,
+                    prof: newSub.prof,
+                    branch: newSub.branch
+                }
             );
-      } catch (error) {
-          throw new NotFoundException();
-      }  
+        } catch (error) {
+            throw new NotFoundException();
+        }
     }
 
     //Delete
 
-    public async delete(subjectsId: string){
+    public async delete(subjectsId: string) {
         try {
-            return await this.subjectModel.deleteOne({ _id: subjectsId});
+            return await this.subjectModel.deleteOne({ _id: subjectsId });
         } catch (error) {
             throw new NotFoundException()
         }

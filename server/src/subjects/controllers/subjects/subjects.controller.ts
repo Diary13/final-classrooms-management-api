@@ -1,25 +1,27 @@
 /* eslint-disable prettier/prettier */
-import { Post ,Body , Delete , Patch, Param , Controller, Get, InternalServerErrorException, Put } from '@nestjs/common';
+import { Post, Body, Delete, Patch, Param, Controller, Get, InternalServerErrorException, Put } from '@nestjs/common';
 import { CreateSubjectsDto } from 'src/dto/create/create-subject.dto';
-import { UpdateSubjectsDto } from 'src/dto/update/uptate-subjects.dto';
-import { SubjectsService } from 'src/subjects/services/subjects.service';
+import { UpdateSubjectsDto } from 'src/dto/update/update-subjects.dto';
+import { SubjectsService } from 'src/subjects/services/subjects/subjects.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('subjects')
 @Controller('subjects')
 export class SubjectsController {
 
-    constructor(private readonly subjectService: SubjectsService) {}
+    constructor(private readonly subjectService: SubjectsService) { }
 
     @Post()
     public create(@Body() createSubjects: CreateSubjectsDto) {
         try {
             return this.subjectService.create(createSubjects);
-        } catch(error) {
+        } catch (error) {
             throw new InternalServerErrorException();
         }
     }
 
     @Get('/all')
-    public findAll(){
+    public findAll() {
         try {
             return this.subjectService.findAll()
         } catch (error) {
@@ -27,16 +29,7 @@ export class SubjectsController {
         }
     }
 
-    // @Patch('/update/:id')
-    // public update(@Param('id') id: string, @Body() newSub: UpdateSubjectsDto) {
-    //     try {
-    //         return this.subjectService.update(id, newSub);
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // }
-
-        @Put('/update/:id')
+    @Put('/update/:id')
     public update(@Param('id') id: string, @Body() newSub: UpdateSubjectsDto) {
         try {
             return this.subjectService.update(id, newSub);
