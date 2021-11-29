@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Delete, Put } from '@nestjs/common';
 import { BranchsService } from 'src/branchs/services/branchs/branchs.service';
 import { CreateBranchsDto } from 'src/dto/create/create-branchs.dto';
 import { UpdateBranchDto } from 'src/dto/update/update-branch.dto';
@@ -27,7 +27,7 @@ export class BranchsController {
             throw error;
         }
     }
-    @Patch('/update/:id')
+    @Put('/update/:id')
     public async update(@Param('id') id: string, @Body() newBranch: UpdateBranchDto) {
         try {
             return await this.branchService.update(id, newBranch);
