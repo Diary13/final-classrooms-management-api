@@ -1,4 +1,4 @@
-# classrooms_gestion
+# classrooms_management_API
 gestion des salles de classe
 
 # Les membres de l'équipe:
