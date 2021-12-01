@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreateStudentsDto } from 'src/dto/create/create-students.dto';
 import { UpdateStudentDto } from 'src/dto/update/update-student.dto';
 import { StudentDocument, Students } from 'src/students/students.model';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class StudentsService {
@@ -12,6 +13,7 @@ export class StudentsService {
 
     public create(createStudent: CreateStudentsDto) {
         try {
+            createStudent.password = bcrypt.hashSync(createStudent.password, 5);
             const newStudent = new this.studentsModel(createStudent);
             return newStudent.save();
         } catch (error) {
@@ -40,6 +42,7 @@ export class StudentsService {
             return await this.studentsModel.updateOne({ _id: student_id }, {
                 name: newStudent.name,
                 mail: newStudent.mail,
+                password: newStudent.password,
                 photo: newStudent.photo,
                 branch: newStudent.branch
             });
