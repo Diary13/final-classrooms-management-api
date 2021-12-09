@@ -20,41 +20,18 @@ export class PersonalsService {
     public async login(loginDto: LoginDto) {
         try {
             var client;
-            const personal = await this.personalModel.findOne({ mail: loginDto.mail });
-            const student = await this.studentModel.findOne({ mail: loginDto.mail });
+            let personal = await this.personalModel.findOne({ mail: loginDto.mail });
+            let student = await this.studentModel.findOne({ mail: loginDto.mail });
             if (!personal) {
                 if (!student)
                     throw new NotFoundException();
                 else {
-                    client = {
-                        id: student._id,
-                        name: student.name,
-                        mail: student.mail,
-                        password: student.password,
-                        photo: student.photo,
-                        access: 'student'
-                    }
+                    student = JSON.parse(JSON.stringify(student));
+                    client = { ...student, access: 'student' }
                 }
             } else {
-                if (personal.isAdmin == true) {
-                    client = {
-                        id: personal._id,
-                        name: personal.name,
-                        password: personal.password,
-                        mail: personal.mail,
-                        photo: personal.photo,
-                        access: 'admin'
-                    }
-                } else {
-                    client = {
-                        id: personal._id,
-                        name: personal.name,
-                        password: personal.password,
-                        mail: personal.mail,
-                        photo: personal.photo,
-                        access: 'prof'
-                    }
-                }
+                personal = JSON.parse(JSON.stringify(personal));
+                client = (personal.isAdmin == true) ? { ...personal, access: 'admin' } : { ...personal, access: 'prof' };
             }
             if (!bcrypt.compareSync(loginDto.password, client.password))
                 throw new NotFoundException();
@@ -63,7 +40,8 @@ export class PersonalsService {
                     id: client._id,
                     name: client.name,
                     mail: client.mail,
-                    photo: client.photo
+                    photo: client.photo,
+                    access: client.access
                 }, environement.KEY)
             }
         } catch (error) {
