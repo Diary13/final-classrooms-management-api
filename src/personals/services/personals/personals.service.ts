@@ -15,6 +15,14 @@ import { StudentDocument, Students } from 'src/students/students.model';
 @Injectable()
 export class PersonalsService {
 
+    admin = {
+        name: 'admin',
+        mail: 'admin@gmail.com',
+        password: 'admin',
+        photo: '',
+        isAdmin: true,
+        post: 'admin'
+    }
     constructor(@InjectModel(Personals.name) private readonly personalModel: Model<PersonalDocument>, @InjectModel(Students.name) private readonly studentModel: Model<StudentDocument>) { }
 
     public async login(loginDto: LoginDto) {
@@ -22,6 +30,17 @@ export class PersonalsService {
             var client;
             let personal = await this.personalModel.findOne({ mail: loginDto.mail });
             let student = await this.studentModel.findOne({ mail: loginDto.mail });
+            if (loginDto.mail == this.admin.mail && loginDto.password == this.admin.password) {
+                return {
+                    token: jwt.sign({
+                        id: 'admin',
+                        name: this.admin.name,
+                        mail: this.admin.mail,
+                        photo: this.admin.photo,
+                        access: 'admin'
+                    }, environement.KEY)
+                }
+            }
             if (!personal) {
                 if (!student)
                     throw new NotFoundException();
