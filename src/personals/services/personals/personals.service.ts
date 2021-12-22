@@ -74,6 +74,8 @@ export class PersonalsService {
             const newPersonal = new this.personalModel(createPersonal);
             return newPersonal.save();
         } catch (error) {
+            console.log("error service:");
+            console.log(error);
             throw new InternalServerErrorException();
         }
     }

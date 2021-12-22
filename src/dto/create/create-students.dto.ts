@@ -7,7 +7,7 @@ export class CreateStudentsDto {
     mail: string;
     @ApiProperty()
     password: string;
-    @ApiProperty()
+    @ApiProperty({ format: 'binary', required: false })
     photo?: string;
     @ApiProperty()
     branch: string;

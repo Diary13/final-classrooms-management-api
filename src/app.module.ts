@@ -9,10 +9,14 @@ import { PersonalsModule } from './personals/personals.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { StudentsModule } from './students/students.module';
 import { SubjectsModule } from './subjects/subjects.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     StudentsModule,
+    MulterModule.register({
+      dest: './uploads',
+    }),
     MongooseModule.forRoot('mongodb://localhost:27017/rooms_gestion'),
     BranchsModule,
     EdtModule,
