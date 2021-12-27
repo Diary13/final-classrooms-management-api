@@ -19,7 +19,7 @@ export class EdtService {
 
     public async findAll() {
         try {
-            return await this.EDTModel.find();
+            return await this.EDTModel.find().populate('branch');
         } catch (error) {
             throw new NotFoundException();
         }
@@ -27,7 +27,7 @@ export class EdtService {
 
     public async findOne(edt_id: string) {
         try {
-            return await this.EDTModel.findOne({ _id: edt_id });
+            return await (await this.EDTModel.findOne({ _id: edt_id })).populate('branch');
         } catch (error) {
             throw new NotFoundException();
         }
@@ -41,7 +41,8 @@ export class EdtService {
                 W: newEDT.W,
                 H: newEDT.H,
                 F: newEDT.F,
-                S: newEDT.S
+                S: newEDT.S,
+                branch: newEDT.branch
             });
         } catch (error) {
             throw new NotFoundException();

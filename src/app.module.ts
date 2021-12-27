@@ -10,6 +10,8 @@ import { RoomsModule } from './rooms/rooms.module';
 import { StudentsModule } from './students/students.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { DepartmentController } from './department/controllers/department/department.controller';
+import { SendMailModule } from './send-mail/send-mail.module';
 
 @Module({
   imports: [
@@ -22,9 +24,10 @@ import { MulterModule } from '@nestjs/platform-express';
     EdtModule,
     PersonalsModule,
     RoomsModule,
-    SubjectsModule
+    SubjectsModule,
+    SendMailModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, DepartmentController],
   providers: [AppService],
 })
 export class AppModule { }

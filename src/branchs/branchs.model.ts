@@ -10,8 +10,8 @@ export class Branchs {
     name: string;
     @Prop({ required: true, default: 0 })
     effectif: number;
-    @Prop({ required: true, ref: EDT.name, type: Mongoose.Types.ObjectId })
-    EDT: string[];
+    @Prop({ required: true })
+    department: string;
 }
 
 export const BranchSchema = SchemaFactory.createForClass(Branchs);

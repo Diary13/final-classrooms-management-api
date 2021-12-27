@@ -30,4 +30,6 @@ export class CreateEDTDto {
     F?: dayEDT;
     @ApiProperty()
     S?: dayEDT;
+    @ApiProperty()
+    branch: string;
 }
