@@ -36,6 +36,15 @@ export class EdtController {
         }
     }
 
+    @Get('/find/:branch')
+    public findByBranchName(@Param('branch') branch: string) {
+        try {
+            return this.EDTService.findByBranchName(branch);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     @Put('/update/:id')
     public update(@Param('id') id: string, @Body() newEDT: CreateEDTDto) {
         try {

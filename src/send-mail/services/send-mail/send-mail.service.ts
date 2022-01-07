@@ -17,28 +17,30 @@ export class SendMailService {
     }
     async getAllEDT() {
         this.edt = await this.edtModel.find().populate('branch', 'prof');
-        console.log(this.edt);
+        // console.log(this.edt);
     }
-    // public async getEDT(day: string, hour: string,) {
-    //     try {
-    //         for (let i = 0; i < this.edt.length; i++) {
-    //             if (day == 'M') {
-    //                 switch (hour) {
-    //                     case 'h1':
-    //                         if (this.edt[i].M.h1.subject != '') {
-    //                             let tmp = {
-    //                                 branch: ,
-    //                                  effectif:
-    //                             }
-    //                         }
-    //                 }
-    //             }
-    //         }
+    public async getEDT(day: string, hour: string,) {
+        try {
+            for (let i = 0; i < this.edt.length; i++) {
+                if (day == 'M') {
+                    switch (hour) {
+                        case 'h1':
+                            if (this.edt[i].M.h1.subject != '') {
+                                if (this.edt[i].M.h1.other_class != null) {
+                                    let tmp = {
+                                        branch: this.edt[i].branch.name,
+                                        effectif: ''
+                                    }
+                                }
+                            }
+                    }
+                }
+            }
 
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // }
+        } catch (error) {
+            throw error;
+        }
+    }
 
     public async sendMail() {
         try {

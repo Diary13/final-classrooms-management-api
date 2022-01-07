@@ -1,12 +1,13 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { BranchDocument, Branchs } from 'src/branchs/branchs.model';
 import { CreateEDTDto } from 'src/dto/create/create-EDT.dto';
 import { EDT, EDTDocument } from 'src/edt/edt.model';
 
 @Injectable()
 export class EdtService {
-    constructor(@InjectModel(EDT.name) private EDTModel: Model<EDTDocument>) { }
+    constructor(@InjectModel(EDT.name) private EDTModel: Model<EDTDocument>, @InjectModel(Branchs.name) private branchModel: Model<BranchDocument>) { }
 
     public create(createEDT: CreateEDTDto) {
         try {
@@ -27,9 +28,22 @@ export class EdtService {
 
     public async findOne(edt_id: string) {
         try {
-            return await (await this.EDTModel.findOne({ _id: edt_id })).populate('branch');
+            return await this.EDTModel.findOne({ _id: edt_id }).populate('branch');
+            // return await (await this.EDTModel.findOne({ _id: edt_id })).populate('branch');
         } catch (error) {
             throw new NotFoundException();
+        }
+    }
+
+    public async findByBranchName(branch: string) {
+        try {
+            const branchFound = await this.branchModel.findOne({ name: branch });
+            if (branchFound)
+                return await this.EDTModel.findOne({ branch: branchFound._id.toString() }).populate('branch');
+            else
+                throw new NotFoundException()
+        } catch (error) {
+            throw new NotFoundException()
         }
     }
 
