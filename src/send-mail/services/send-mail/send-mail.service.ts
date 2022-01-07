@@ -16,7 +16,7 @@ export class SendMailService {
         this.getAllEDT();
     }
     async getAllEDT() {
-        this.edt = await this.edtModel.find().populate('branch');
+        this.edt = await this.edtModel.find().populate('branch', 'prof');
         console.log(this.edt);
     }
     // public async getEDT(day: string, hour: string,) {
@@ -27,14 +27,12 @@ export class SendMailService {
     //                     case 'h1':
     //                         if (this.edt[i].M.h1.subject != '') {
     //                             let tmp = {
-    //                                 branch: 
+    //                                 branch: ,
+    //                                  effectif:
     //                             }
     //                         }
     //                 }
     //             }
-
-
-
     //         }
 
     //     } catch (error) {

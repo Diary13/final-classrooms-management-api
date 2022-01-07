@@ -25,7 +25,15 @@ export class SubjectsService {
     //Read
     public async findAll() {
         try {
-            return await this.subjectModel.find();
+            return await this.subjectModel.find().populate('prof');
+        } catch (error) {
+            throw new NotFoundException();
+        }
+    }
+
+    public async findByBranchName(branch: string) {
+        try {
+            return await this.subjectModel.find({ branch: branch }).populate('prof');
         } catch (error) {
             throw new NotFoundException();
         }
