@@ -62,4 +62,13 @@ export class EdtController {
             throw error;
         }
     }
+
+    @Get('/test/cool')
+    public test() {
+        try {
+            return this.EDTService.test();
+        } catch (error) {
+            throw error;
+        }
+    }
 }

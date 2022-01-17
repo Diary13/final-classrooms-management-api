@@ -37,6 +37,14 @@ export class BranchsService {
             return new NotFoundException();
         }
     }
+
+    public async findByName(branch: string) {
+        try {
+            return await this.branchModel.findOne({ name: branch });
+        } catch (error) {
+            throw new NotFoundException();
+        }
+    }
     public async update(branch_id: string, newBranch: UpdateBranchDto) {
         try {
             return await this.branchModel.updateOne({ _id: branch_id }, {

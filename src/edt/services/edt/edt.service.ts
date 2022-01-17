@@ -29,7 +29,6 @@ export class EdtService {
     public async findOne(edt_id: string) {
         try {
             return await this.EDTModel.findOne({ _id: edt_id }).populate('branch');
-            // return await (await this.EDTModel.findOne({ _id: edt_id })).populate('branch');
         } catch (error) {
             throw new NotFoundException();
         }
@@ -66,6 +65,14 @@ export class EdtService {
     public async delete(EDT_id: string) {
         try {
             return await this.EDTModel.deleteOne({ _id: EDT_id });
+        } catch (error) {
+            throw new NotFoundException();
+        }
+    }
+
+    public async test() {
+        try {
+            return await this.EDTModel.find().populate('branch').sort({ branch: -1 });//desc,asc,1,-1
         } catch (error) {
             throw new NotFoundException();
         }

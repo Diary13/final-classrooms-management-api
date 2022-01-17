@@ -38,6 +38,15 @@ export class BranchsController {
         }
     }
 
+    @Get('find/one/:branch')
+    findByName(@Param('branch') branch: string) {
+        try {
+            return this.branchService.findByName(branch);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     @Put('/update/:id')
     public async update(@Param('id') id: string, @Body() newBranch: UpdateBranchDto) {
         try {

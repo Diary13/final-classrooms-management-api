@@ -13,9 +13,9 @@ export class SendMailController {
     @Post()
     public sendMail() {
         try {
-            this.sendMailService.sendMail();
+            return this.sendMailService.sendMail();
         } catch (error) {
-
+            return error;
         }
     }
 }
