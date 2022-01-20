@@ -37,9 +37,9 @@ export class EdtController {
     }
 
     @Get('/find/:branch')
-    public findByBranchName(@Param('branch') branch: string) {
+    public async findByBranchName(@Param('branch') branch: string) {
         try {
-            return this.EDTService.findByBranchName(branch);
+            return await this.EDTService.findByBranchName(branch);
         } catch (error) {
             throw error;
         }
@@ -63,12 +63,12 @@ export class EdtController {
         }
     }
 
-    @Get('/test/cool')
-    public test() {
-        try {
-            return this.EDTService.test();
-        } catch (error) {
-            throw error;
-        }
-    }
+    // @Get('/test/cool')
+    // public test() {
+    //     try {
+    //         return this.EDTService.test();
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // }
 }

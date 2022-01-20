@@ -28,7 +28,7 @@ export class EdtService {
 
     public async findOne(edt_id: string) {
         try {
-            return await this.EDTModel.findOne({ _id: edt_id }).populate('branch');
+            return await this.EDTModel.findOne({ _id: edt_id });
         } catch (error) {
             throw new NotFoundException();
         }
@@ -37,10 +37,15 @@ export class EdtService {
     public async findByBranchName(branch: string) {
         try {
             const branchFound = await this.branchModel.findOne({ name: branch });
-            if (branchFound)
-                return await this.EDTModel.findOne({ branch: branchFound._id.toString() }).populate('branch');
+            if (branchFound) {
+                const result = await this.EDTModel.find().populate('branch');
+                for (let i = 0; i < result.length; i++) {
+                    if (result[i]['branch']['_id'].toString() == branchFound._id.toString())
+                        return result[i];
+                }
+            }
             else
-                throw new NotFoundException()
+                throw new NotFoundException();
         } catch (error) {
             throw new NotFoundException()
         }

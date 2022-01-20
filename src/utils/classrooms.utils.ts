@@ -54,6 +54,10 @@ export class ClassroomsUtils {
                                 name: rooms[j].name,
                                 place_nb: rooms[j].place_nb
                             },
+                            subject: {
+                                name: branch[i].subject.name,
+                                prof: branch[i].subject.prof
+                            },
                             branch: {
                                 name: branch[i].branch_name,
                                 effectif: branch[i].effectif
@@ -75,9 +79,13 @@ export class ClassroomsUtils {
                             name: "salle non disponible",
                             place_nb: 0
                         },
+                        subject: {
+                            name: branch[l].subject.name,
+                            prof: branch[l].subject.prof
+                        },
                         branch: {
-                            name: branch[i].branch_name,
-                            effectif: branch[i].effectif
+                            name: branch[l].branch_name,
+                            effectif: branch[l].effectif
                         }
                     }
                     this.class_generated.push(tmp);
