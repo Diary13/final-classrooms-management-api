@@ -6,7 +6,9 @@ export class UpdateStudentDto {
     @ApiProperty()
     readonly mail?: string;
     @ApiProperty()
-    readonly photo: string;
+    readonly password?: string;
+    @ApiProperty({ format: 'binary', required: false })
+    photo?: string;
     @ApiProperty()
     readonly branch?: string;
 }

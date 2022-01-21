@@ -1,13 +1,14 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiBody, ApiConsumes } from "@nestjs/swagger";
 
 export class CreatePersonalsDto {
+
     @ApiProperty()
     name: string;
     @ApiProperty()
     mail: string;
     @ApiProperty()
     password: string;
-    @ApiProperty()
+    @ApiProperty({ format: 'binary', required: false })
     photo?: string;
     @ApiProperty()
     isAdmin: boolean;//admin ou ...

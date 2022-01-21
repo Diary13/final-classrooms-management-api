@@ -29,6 +29,15 @@ export class SubjectsController {
         }
     }
 
+    @Get('/:branch/all')
+    public findByBranchName(@Param('branch') branch: string) {
+        try {
+            return this.subjectService.findByBranchName(branch);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     @Put('/update/:id')
     public update(@Param('id') id: string, @Body() newSub: UpdateSubjectsDto) {
         try {
