@@ -75,18 +75,15 @@ export class SendMailService {
 
     public async sendMail() {
         try {
-            let day = ['M', 'T', 'W', 'H', 'F', 'S'];
-            let hour = ['h1', 'h2', 'h3', 'h4'];
-            for (let i = 0; i < 6; i++) {
-                if (i != 5) {
-                    for (let j = 0; j < 4; j++)
-                        await this.distribute_Classrooms(day[i], hour[j]);
-                } else {
-                    for (let j = 0; j < 2; j++)
-                        await this.distribute_Classrooms(day[i], hour[j]);
+            const edt_updated = await this.update_each_edt();
+            if (edt_updated == true) {
+                const branchs = await this.branchService.findAll();
+                for (let i = 0; i < branchs.length; i++) {
+                    let edt_branch = await this.EDTService.findByBranchName(branchs[i].name);
                 }
-            }
-            return "EDT UPDATED SUCCESSFULLY"
+                return branchs;
+            } else
+                return new InternalServerErrorException();
         } catch (error) {
             throw new InternalServerErrorException();
         }
@@ -108,10 +105,12 @@ export class SendMailService {
             const result = await this.classroomUtils.generate(rooms, branch);
 
             for (let k = 0; k < result.length; k++) {
+                let branch_edt;//debug
                 if (result[k].branch.name.length > 1) {
                     for (let i = 0; i < result[k].branch.name.length; i++) {
                         let tmp_branch_name = [...result[k].branch.name];
-                        let branch_edt = await this.EDTService.findByBranchName(result[k].branch.name[i]);
+
+                        branch_edt = await this.EDTService.findByBranchName(result[k].branch.name[i]);
                         tmp_branch_name.splice(i, 1);
                         branch_edt[day][hour] = {
                             subject: result[k].subject.name,
@@ -122,7 +121,7 @@ export class SendMailService {
                         await this.EDTService.update(branch_edt._id, branch_edt);
                     }
                 } else {
-                    let branch_edt = await this.EDTService.findByBranchName(result[k].branch.name[0]);
+                    branch_edt = await this.EDTService.findByBranchName(result[k].branch.name[0]);
                     branch_edt[day][hour] = {
                         subject: result[k].subject.name,
                         prof: result[k].subject.prof,
@@ -134,6 +133,26 @@ export class SendMailService {
             }
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    public async update_each_edt() {
+        try {
+            let day = ['M', 'T', 'W', 'H', 'F', 'S'];
+            let hour = ['h1', 'h2', 'h3', 'h4'];
+            for (let i = 0; i < 6; i++) {
+                if (i != 5) {
+                    for (let j = 0; j < 4; j++)
+                        await this.distribute_Classrooms(day[i], hour[j]);
+                } else {
+                    for (let j = 0; j < 2; j++)
+                        await this.distribute_Classrooms(day[i], hour[j]);
+                }
+            }
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
         }
     }
 }
