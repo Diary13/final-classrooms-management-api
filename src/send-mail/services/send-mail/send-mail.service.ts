@@ -76,20 +76,27 @@ export class SendMailService {
         }
     }
 
-    async sendMailToUser(user: any, edt: any) {
+    async sendMailToUser(user: any, edt: any, d: any) {
         await this.mailerService.sendMail({
             to: user.mail,
             subject: 'EMPLOI DU TEMPS ' + edt.branch.name,
             template: '../edt',
             context: {
+                update: d.update,
+                start_date: d.start_date,
+                end_date: d.end_date,
                 name: user.name,
                 ...edt
             }
         });
     }
 
-    public async sendMail() {
+    public async sendMail(obj: any, update: boolean) {
         try {
+            let obj_date = {
+                update: update,
+                ...obj
+            }
             const edt_updated = await this.update_each_edt();
             if (edt_updated == true) {
                 const branchs = await this.branchService.findAll();
@@ -100,7 +107,7 @@ export class SendMailService {
                     edt_branch = JSON.parse(tmp);
                     if (students.length > 0) {
                         for (let j = 0; j < students.length; j++) {
-                            await this.sendMailToUser(students[j], edt_branch);
+                            await this.sendMailToUser(students[j], edt_branch, obj_date);
                         }
                     }
                 }
@@ -108,8 +115,6 @@ export class SendMailService {
             } else
                 return new InternalServerErrorException();
         } catch (error) {
-            console.log(error);
-
             throw new InternalServerErrorException();
         }
     }

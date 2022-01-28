@@ -11,19 +11,29 @@ import { LoginDto } from 'src/dto/login.dto';
 import { UsingJoinTableIsNotAllowedError } from 'typeorm';
 import { environement } from 'src/environment';
 import { StudentDocument, Students } from 'src/students/students.model';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PersonalsService {
 
-    admin = {
-        name: 'admin',
-        mail: 'admin@gmail.com',
-        password: 'admin',
+    private admin = {
+        name: '',
+        mail: '',
+        password: '',
         photo: '',
         isAdmin: true,
         post: 'admin'
+    };
+
+    constructor(
+        private config: ConfigService,
+        @InjectModel(Personals.name) private readonly personalModel: Model<PersonalDocument>,
+        @InjectModel(Students.name) private readonly studentModel: Model<StudentDocument>
+    ) {
+        this.admin.name = this.config.get('NAME');
+        this.admin.mail = this.config.get('MAIL');
+        this.admin.password = this.config.get('PASSWORD');
     }
-    constructor(@InjectModel(Personals.name) private readonly personalModel: Model<PersonalDocument>, @InjectModel(Students.name) private readonly studentModel: Model<StudentDocument>) { }
 
     public async login(loginDto: LoginDto) {
         try {
