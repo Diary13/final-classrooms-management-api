@@ -34,9 +34,9 @@ export class EdtService {
         }
     }
 
-    public async findByBranchName(branch: string) {
+    public async findByBranchName(branchName: string) {
         try {
-            const branchFound = await this.branchModel.findOne({ name: branch });
+            const branchFound = await this.branchModel.findOne({ name: branchName });
             if (branchFound) {
                 const result = await this.EDTModel.find().populate('branch');
                 for (let i = 0; i < result.length; i++) {

@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BranchDocument, Branchs } from 'src/branchs/branchs.model';
 import { BranchsService } from 'src/branchs/services/branchs/branchs.service';
-import { CreateEDTDto } from 'src/dto/create/create-EDT.dto';
-import { EDT, EDTDocument } from 'src/edt/edt.model';
+import { StudentsService } from 'src/students/services/students/students.service';
 import { EdtService } from 'src/edt/services/edt/edt.service';
 import { RoomDocument, Rooms } from 'src/rooms/rooms.model';
 import { ClassroomsUtils } from 'src/utils/classrooms.utils';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class SendMailService {
@@ -16,7 +16,10 @@ export class SendMailService {
     private edt;
 
     constructor(
-        private EDTService: EdtService, private branchService: BranchsService,
+        private mailerService: MailerService,
+        private EDTService: EdtService,
+        private branchService: BranchsService,
+        private studentService: StudentsService,
         @InjectModel(Rooms.name) private roomModel: Model<RoomDocument>,
         @InjectModel(Branchs.name) private branchModel: Model<BranchDocument>
     ) {
@@ -28,7 +31,7 @@ export class SendMailService {
     }
     public async getEDT(day: string, hour: string,) {
         try {
-            let tmp_edt = this.edt;
+            let tmp_edt = [...this.edt];
             let edt_hours = [];
 
             for (let i = 0; i < tmp_edt.length; i++) {
@@ -73,15 +76,42 @@ export class SendMailService {
         }
     }
 
-    public async sendMail() {
+    async sendMailToUser(user: any, edt: any, d: any) {
+        await this.mailerService.sendMail({
+            to: user.mail,
+            subject: 'EMPLOI DU TEMPS ' + edt.branch.name,
+            template: '../edt',
+            context: {
+                update: d.update,
+                start_date: d.start_date,
+                end_date: d.end_date,
+                name: user.name,
+                ...edt
+            }
+        });
+    }
+
+    public async sendMail(obj: any, update: boolean) {
         try {
+            let obj_date = {
+                update: update,
+                ...obj
+            }
             const edt_updated = await this.update_each_edt();
             if (edt_updated == true) {
                 const branchs = await this.branchService.findAll();
                 for (let i = 0; i < branchs.length; i++) {
                     let edt_branch = await this.EDTService.findByBranchName(branchs[i].name);
+                    let students = await this.studentService.findAllByBranchName(branchs[i].name);
+                    let tmp = JSON.stringify(edt_branch);
+                    edt_branch = JSON.parse(tmp);
+                    if (students.length > 0) {
+                        for (let j = 0; j < students.length; j++) {
+                            await this.sendMailToUser(students[j], edt_branch, obj_date);
+                        }
+                    }
                 }
-                return branchs;
+                return "MAIL SEND SUCCESSFULLY";
             } else
                 return new InternalServerErrorException();
         } catch (error) {
@@ -97,11 +127,10 @@ export class SendMailService {
             rooms.sort((a, b) => {
                 return a.place_nb - b.place_nb;
             })
-            const branch = await this.getEDT(day, hour);
+            let branch = await this.getEDT(day, hour);
             branch.sort((a, b) => {
                 return a.effectif - b.effectif;
             })
-
             const result = await this.classroomUtils.generate(rooms, branch);
 
             for (let k = 0; k < result.length; k++) {
@@ -138,15 +167,16 @@ export class SendMailService {
 
     public async update_each_edt() {
         try {
-            let day = ['M', 'T', 'W', 'H', 'F', 'S'];
-            let hour = ['h1', 'h2', 'h3', 'h4'];
+            let days = ['M', 'T', 'W', 'H', 'F', 'S'];
+            let hours = ['h1', 'h2', 'h3', 'h4'];
+
             for (let i = 0; i < 6; i++) {
                 if (i != 5) {
                     for (let j = 0; j < 4; j++)
-                        await this.distribute_Classrooms(day[i], hour[j]);
+                        await this.distribute_Classrooms(days[i], hours[j]);
                 } else {
                     for (let j = 0; j < 2; j++)
-                        await this.distribute_Classrooms(day[i], hour[j]);
+                        await this.distribute_Classrooms(days[i], hours[j]);
                 }
             }
             return true;
