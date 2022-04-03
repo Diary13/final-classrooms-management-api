@@ -8,7 +8,6 @@ import { CreatePersonalsDto } from 'src/dto/create/create-personals.dto';
 import { PersonalDocument, Personals } from 'src/personals/personals.model';
 import { UpdatePersonalsDto } from 'src/dto/update/update-personals.dto';
 import { LoginDto } from 'src/dto/login.dto';
-import { UsingJoinTableIsNotAllowedError } from 'typeorm';
 import { environement } from 'src/environment';
 import { StudentDocument, Students } from 'src/students/students.model';
 import { ConfigService } from '@nestjs/config';
@@ -23,6 +22,14 @@ export class PersonalsService {
         photo: '',
         isAdmin: true,
         post: 'admin'
+    };
+    private client = {
+        name: 'client1',
+        mail: 'client1@gmail.com',
+        password: 'client1',
+        photo: '',
+        isAdmin: false,
+        post: 'student'
     };
 
     constructor(
@@ -49,6 +56,18 @@ export class PersonalsService {
                         photo: this.admin.photo,
                         access: 'admin'
                     }, environement.KEY)
+                }
+            } else {
+                if (loginDto.mail == this.client.mail && loginDto.password == this.client.password) {
+                    return {
+                        token: jwt.sign({
+                            id: 'student',
+                            name: this.client.name,
+                            mail: this.client.mail,
+                            photo: this.client.photo,
+                            access: 'student'
+                        }, environement.KEY)
+                    }
                 }
             }
             if (!personal) {
@@ -129,5 +148,4 @@ export class PersonalsService {
             throw new NotFoundException();
         }
     }
-
 }
