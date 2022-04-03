@@ -1,16 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class UpdatePersonalsDto {
-    @ApiProperty()
+    @ApiProperty({ required: false })
     readonly name?: string;
-    @ApiProperty()
+    @ApiProperty({ required: false })
     readonly mail?: string;
-    @ApiProperty()
+    @ApiProperty({ required: false })
     readonly password?: string;
-    @ApiProperty()
-    readonly photo: string;
-    @ApiProperty()
+    @ApiProperty({ format: 'binary', required: false })
+    photo?: string;
+    @ApiProperty({ required: false })
     readonly isAdmin?: boolean;//admin ou ...
-    @ApiProperty()
+    @ApiProperty({ required: false })
     readonly post?: string;// prof ou ...
 }

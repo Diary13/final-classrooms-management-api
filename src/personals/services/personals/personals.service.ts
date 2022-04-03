@@ -8,26 +8,88 @@ import { CreatePersonalsDto } from 'src/dto/create/create-personals.dto';
 import { PersonalDocument, Personals } from 'src/personals/personals.model';
 import { UpdatePersonalsDto } from 'src/dto/update/update-personals.dto';
 import { LoginDto } from 'src/dto/login.dto';
-import { UsingJoinTableIsNotAllowedError } from 'typeorm';
 import { environement } from 'src/environment';
+import { StudentDocument, Students } from 'src/students/students.model';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PersonalsService {
 
-    constructor(@InjectModel(Personals.name) private readonly personalModel: Model<PersonalDocument>) { }
+    private admin = {
+        name: '',
+        mail: '',
+        password: '',
+        photo: '',
+        isAdmin: true,
+        post: 'admin'
+    };
+    private client = {
+        name: 'client1',
+        mail: 'client1@gmail.com',
+        password: 'client1',
+        photo: '',
+        isAdmin: false,
+        post: 'student'
+    };
+
+    constructor(
+        private config: ConfigService,
+        @InjectModel(Personals.name) private readonly personalModel: Model<PersonalDocument>,
+        @InjectModel(Students.name) private readonly studentModel: Model<StudentDocument>
+    ) {
+        this.admin.name = this.config.get('NAME');
+        this.admin.mail = this.config.get('MAIL');
+        this.admin.password = this.config.get('PASSWORD');
+    }
 
     public async login(loginDto: LoginDto) {
         try {
-            const personal = await this.personalModel.findOne({ mail: loginDto.mail });
-            if (!personal) throw new NotFoundException();
-            if (!bcrypt.compareSync(loginDto.password, personal.password))
+            var client;
+            let personal = await this.personalModel.findOne({ mail: loginDto.mail });
+            let student = await this.studentModel.findOne({ mail: loginDto.mail });
+            if (loginDto.mail == this.admin.mail && loginDto.password == this.admin.password) {
+                return {
+                    token: jwt.sign({
+                        id: 'admin',
+                        name: this.admin.name,
+                        mail: this.admin.mail,
+                        photo: this.admin.photo,
+                        access: 'admin'
+                    }, environement.KEY)
+                }
+            } else {
+                if (loginDto.mail == this.client.mail && loginDto.password == this.client.password) {
+                    return {
+                        token: jwt.sign({
+                            id: 'student',
+                            name: this.client.name,
+                            mail: this.client.mail,
+                            photo: this.client.photo,
+                            access: 'student'
+                        }, environement.KEY)
+                    }
+                }
+            }
+            if (!personal) {
+                if (!student)
+                    throw new NotFoundException();
+                else {
+                    student = JSON.parse(JSON.stringify(student));
+                    client = { ...student, access: 'student' }
+                }
+            } else {
+                personal = JSON.parse(JSON.stringify(personal));
+                client = (personal.isAdmin == true) ? { ...personal, access: 'admin' } : { ...personal, access: 'prof' };
+            }
+            if (!bcrypt.compareSync(loginDto.password, client.password))
                 throw new NotFoundException();
             return {
                 token: jwt.sign({
-                    id: personal._id,
-                    name: personal.name,
-                    mail: personal.mail,
-                    photo: personal.photo
+                    id: client._id,
+                    name: client.name,
+                    mail: client.mail,
+                    photo: client.photo,
+                    access: client.access
                 }, environement.KEY)
             }
         } catch (error) {
@@ -37,11 +99,12 @@ export class PersonalsService {
 
     public create(createPersonal: CreatePersonalsDto) {
         try {
-            if (createPersonal.isAdmin == true)
-                createPersonal.password = bcrypt.hashSync(createPersonal.password, 5);
+            createPersonal.password = bcrypt.hashSync(createPersonal.password, 5);
             const newPersonal = new this.personalModel(createPersonal);
             return newPersonal.save();
         } catch (error) {
+            console.log("error service:");
+            console.log(error);
             throw new InternalServerErrorException();
         }
     }
@@ -64,26 +127,15 @@ export class PersonalsService {
 
     public async update(personal_id: string, newPersonal: UpdatePersonalsDto) {
         try {
-            if (newPersonal.isAdmin == true) {
-                const tmp = bcrypt.hashSync(newPersonal.password, 5);
-                return await this.personalModel.updateOne({ _id: personal_id }, {
-                    name: newPersonal.name,
-                    mail: newPersonal.mail,
-                    password: tmp,
-                    photo: newPersonal.photo,
-                    isAdmin: true,
-                    post: newPersonal.post
-                });
-            } else {
-                return await this.personalModel.updateOne({ _id: personal_id }, {
-                    name: newPersonal.name,
-                    mail: newPersonal.mail,
-                    password: '',
-                    photo: newPersonal.photo,
-                    isAdmin: false,
-                    post: newPersonal.post
-                });
-            }
+            const tmp = bcrypt.hashSync(newPersonal.password, 5);
+            return await this.personalModel.updateOne({ _id: personal_id }, {
+                name: newPersonal.name,
+                mail: newPersonal.mail,
+                password: tmp,
+                photo: newPersonal.photo,
+                isAdmin: newPersonal.isAdmin,
+                post: newPersonal.post
+            });
         } catch (error) {
             throw new NotFoundException();
         }
@@ -96,5 +148,4 @@ export class PersonalsService {
             throw new NotFoundException();
         }
     }
-
 }

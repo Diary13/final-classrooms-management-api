@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { BranchDocument, Branchs } from 'src/branchs/branchs.model';
 import { CreateBranchsDto } from 'src/dto/create/create-branchs.dto';
 import { UpdateBranchDto } from 'src/dto/update/update-branch.dto';
+import { ClassroomsUtils } from 'src/utils/classrooms.utils';
 
 @Injectable()
 export class BranchsService {
@@ -24,10 +25,24 @@ export class BranchsService {
 
     public async findAll(): Promise<any> {
         try {
-            return await this.branchModel.find().populate('EDT');
+            return await this.branchModel.find();
         } catch (error) {
-            console.log(error);
             return new NotFoundException();
+        }
+    }
+    public async findAllByDepartment(department: string): Promise<any> {
+        try {
+            return await this.branchModel.find({ department: department });
+        } catch (error) {
+            return new NotFoundException();
+        }
+    }
+
+    public async findByName(branch: string) {
+        try {
+            return await this.branchModel.findOne({ name: branch });
+        } catch (error) {
+            throw new NotFoundException();
         }
     }
     public async update(branch_id: string, newBranch: UpdateBranchDto) {
@@ -35,7 +50,7 @@ export class BranchsService {
             return await this.branchModel.updateOne({ _id: branch_id }, {
                 name: newBranch.name,
                 effectif: newBranch.effectif,
-                EDT: newBranch.EDT,
+                department: newBranch.department
             });
         }
         catch (error) {

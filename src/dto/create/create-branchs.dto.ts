@@ -6,5 +6,5 @@ export class CreateBranchsDto {
     @ApiProperty()
     effectif: number;
     @ApiProperty()
-    EDT: string;
+    department: string;
 }
