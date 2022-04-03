@@ -4,6 +4,10 @@ export class hourEDT {
     @ApiProperty()
     subject: string;
     @ApiProperty()
+    prof: string;
+    @ApiProperty()
+    other_class: string[];
+    @ApiProperty()
     room: string;
 }
 export class dayEDT {
@@ -30,4 +34,6 @@ export class CreateEDTDto {
     F?: dayEDT;
     @ApiProperty()
     S?: dayEDT;
+    @ApiProperty()
+    branch: string;
 }

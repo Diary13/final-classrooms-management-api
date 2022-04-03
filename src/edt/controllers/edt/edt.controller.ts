@@ -36,6 +36,15 @@ export class EdtController {
         }
     }
 
+    @Get('/find/:branch')
+    public async findByBranchName(@Param('branch') branch: string) {
+        try {
+            return await this.EDTService.findByBranchName(branch);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     @Put('/update/:id')
     public update(@Param('id') id: string, @Body() newEDT: CreateEDTDto) {
         try {
@@ -53,4 +62,13 @@ export class EdtController {
             throw error;
         }
     }
+
+    // @Get('/test/cool')
+    // public test() {
+    //     try {
+    //         return this.EDTService.test();
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // }
 }

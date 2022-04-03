@@ -6,7 +6,8 @@ import { BranchsService } from './services/branchs/branchs.service';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: Branchs.name, schema: BranchSchema }])],
+  exports: [MongooseModule, BranchsService],
   controllers: [BranchsController],
   providers: [BranchsService]
 })
-export class BranchsModule {}
+export class BranchsModule { }

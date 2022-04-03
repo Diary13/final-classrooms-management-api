@@ -5,11 +5,12 @@ import { CreateStudentsDto } from 'src/dto/create/create-students.dto';
 import { UpdateStudentDto } from 'src/dto/update/update-student.dto';
 import { StudentDocument, Students } from 'src/students/students.model';
 import * as bcrypt from 'bcrypt';
+import { BranchDocument, Branchs } from 'src/branchs/branchs.model';
 
 @Injectable()
 export class StudentsService {
 
-    constructor(@InjectModel(Students.name) private studentsModel: Model<StudentDocument>) { }
+    constructor(@InjectModel(Students.name) private studentsModel: Model<StudentDocument>, @InjectModel(Branchs.name) private branchsModel: Model<BranchDocument>) { }
 
     public create(createStudent: CreateStudentsDto) {
         try {
@@ -23,7 +24,7 @@ export class StudentsService {
 
     public async findAll() {
         try {
-            return await this.studentsModel.find();
+            return await this.studentsModel.find().populate('branch');
         } catch (error) {
             throw new NotFoundException();
         }
@@ -32,6 +33,15 @@ export class StudentsService {
     public async findOne(student_id: string) {
         try {
             return await this.studentsModel.findOne({ _id: student_id });
+        } catch (error) {
+            throw new NotFoundException();
+        }
+    }
+
+    public async findAllByBranchName(branchName: string) {
+        try {
+            let branch = await this.branchsModel.findOne({ name: branchName });
+            return await this.studentsModel.find({ branch: branch._id.toString() }).populate('branch');
         } catch (error) {
             throw new NotFoundException();
         }

@@ -6,5 +6,5 @@ export class UpdateBranchDto {
     @ApiProperty()
     readonly effectif?: number;
     @ApiProperty()
-    readonly EDT?: string[];
+    readonly department?: string;
 }

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Pat
 import { CreateStudentsDto } from 'src/dto/create/create-students.dto';
 import { UpdateStudentDto } from 'src/dto/update/update-student.dto';
 import { StudentsService } from 'src/students/services/students/students.service';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as fs from 'fs';
 
@@ -37,6 +37,15 @@ export class StudentsController {
     public findAll() {
         try {
             return this.studentService.findAll();
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @Get('/all/:branch')
+    public findAllByBranchName(@Param('branch') branch: string) {
+        try {
+            return this.studentService.findAllByBranchName(branch);
         } catch (error) {
             throw error;
         }

@@ -10,21 +10,28 @@ import { RoomsModule } from './rooms/rooms.module';
 import { StudentsModule } from './students/students.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { DepartmentController } from './department/controllers/department/department.controller';
+import { SendMailModule } from './send-mail/send-mail.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true
+    }),
     StudentsModule,
     MulterModule.register({
-      dest: './uploads',
+      dest: './uploads'
     }),
     MongooseModule.forRoot('mongodb://localhost:27017/rooms_gestion'),
     BranchsModule,
     EdtModule,
     PersonalsModule,
     RoomsModule,
-    SubjectsModule
+    SubjectsModule,
+    SendMailModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, DepartmentController],
   providers: [AppService],
 })
 export class AppModule { }
