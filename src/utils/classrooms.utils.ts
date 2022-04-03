@@ -76,7 +76,7 @@ export class ClassroomsUtils {
                 for (let l = i; l < branch.length; l++) {
                     const tmp = {
                         room: {
-                            name: "salle non disponible",
+                            name: "non disponible",
                             place_nb: 0
                         },
                         subject: {
